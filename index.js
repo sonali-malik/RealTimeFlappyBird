@@ -32,11 +32,11 @@ var playerColor = [
         })();
          //sounds
 
-        var soundJump = new Audio("wing.ogg");
-        var soundScore = new Audio("point.ogg");
-        var soundHit = new Audio("hit.ogg");
-        var soundDie = new Audio("die.ogg");
-        var soundSwoosh = new Audio("swooshing.ogg");
+        var soundJump = new Audio("audio/wing.ogg");
+        var soundScore = new Audio("audio/point.ogg");
+        var soundHit = new Audio("audio/hit.ogg");
+        var soundDie = new Audio("audio/die.ogg");
+        var soundSwoosh = new Audio("audio/swooshing.ogg");
          //http://www.storiesinflight.com/html5/audio.html
         var channel_max = 10; // number of channels
         var audiochannels = new Array();
@@ -448,7 +448,7 @@ var playerColor = [
         FB.Bird = function () {
 
             this.img = new Image();
-            this.img.src = 'bird.png';
+            this.img.src = 'imgs/bird.png';
             this.gravity = 0.25;
             this.width = 34;
             this.height = 24;
@@ -597,7 +597,7 @@ var playerColor = [
 		window.Splash = function(){
 			
 			this.banner = new Image();
-			this.banner.src = "splash.png";
+			this.banner.src = "imgs/splash.png";
 			
 			this.init = function(){
 				play_sound(soundSwoosh);
@@ -646,7 +646,7 @@ var playerColor = [
                 FB.entities.push(FB.bird);
 				for(var n=0;n<10;n++){
 					var img = new Image();
-					img.src = "font_small_" + n +'.png';
+					img.src = "imgs/font_small_" + n +'.png';
 					FB.fonts.push(img);
 				}
 				FB.digits = ["0"];
@@ -756,12 +756,12 @@ var playerColor = [
 				setTimeout(function() {
 					play_sound(soundDie);
 					that.banner = new Image();
-					that.banner.src = "scoreboard.png";
+					that.banner.src = "imgs/scoreboard.png";
 					var m = that.getMedal();
 					that.medal =  new Image();
-					that.medal.src = 'medal_' + m +'.png';
+					that.medal.src = 'imgs/medal_' + m +'.png';
 					that.replay = new Image();
-					that.replay.src = "replay.png";
+					that.replay.src = "imgs/replay.png";
 					that.highscore = that.getHighScore() ;
 				}, 500);
 				
