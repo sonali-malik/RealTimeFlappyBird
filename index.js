@@ -59,7 +59,24 @@ var playerColor = [
             }
         }
 		
-	
+        function getCookie(cname)
+        {
+           var name = cname + "=";
+           var ca = document.cookie.split(';');
+           for(var i=0; i<ca.length; i++) 
+           {
+              var c = ca[i].trim();
+              if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+           }
+           return "";
+        }
+        function setCookie(cname,cvalue,exdays)
+        {
+           var d = new Date();
+           d.setTime(d.getTime()+(exdays*24*60*60*1000));
+           var expires = "expires="+d.toGMTString();
+           document.cookie = cname + "=" + cvalue + "; " + expires;
+        }	
 
          // namespace our game
         var FB = {
@@ -702,6 +719,7 @@ var playerColor = [
 			
 			this.getMedal = function()
 			{
+             var medal;
 			   var score = FB.score.coins;
 			   console.log(score)
 			   if(score <= 10)
@@ -716,7 +734,7 @@ var playerColor = [
 				return medal;
 			}
 			this.getHighScore = function(){
-				var savedscore = getCookie("highscore");
+				var savedscore = get("highscore");
 			    if(savedscore != ""){
 					var hs = parseInt(savedscore) || 0;
 					if(hs < FB.score.coins)
