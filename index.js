@@ -734,7 +734,7 @@ var playerColor = [
 				return medal;
 			}
 			this.getHighScore = function(){
-				var savedscore = get("highscore");
+				var savedscore = getCookie("highscore");
 			    if(savedscore != ""){
 					var hs = parseInt(savedscore) || 0;
 					if(hs < FB.score.coins)
