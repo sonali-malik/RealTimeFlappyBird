@@ -1,6 +1,6 @@
  angular.module('myApp', [])
-  .run(['$translate', '$log', 'realTimeService', 'randomService',
-      function ($translate, $log, realTimeService, randomService) {
+  .run(['$translate', '$log', 'realTimeService', 'randomService','resizeGameAreaService',
+      function ($translate, $log, realTimeService, randomService, resizeGameAreaService) {
 'use strict';
 
 
@@ -796,7 +796,8 @@ var playerColor = [
        
  function createCanvasController(canvas) {
      
-  function gotStartMatch(params) {}
+  function gotStartMatch(params) {resizeGameAreaService.setWidthToHeight(0.5);
+}
    function gotMessage(params) {}
    function gotEndMatch(endMatchScores) {}
        return {
@@ -810,5 +811,5 @@ realTimeService.init({
   canvasWidth: canvasWidth,
   canvasHeight: canvasHeight
 });
-
+resizeGameAreaService.setWidthToHeight(0.5);
 }])
