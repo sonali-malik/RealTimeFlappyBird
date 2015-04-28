@@ -745,6 +745,8 @@ console.log("createCanvasController for canvas.id=" + canvas.id);
 			}
 			
 			this.render = function() { 
+             var meter = new FPSMeter(document.body );
+             meter.tick();
 				//score				
 				var X = (FB.WIDTH/2-(FB.digits.length*14)/2);				
 				for(var i = 0; i < FB.digits.length; i++)
