@@ -19,6 +19,9 @@ var playerColor = [
   'blue', 'red', 'brown', 'purple',
   'pink', 'yellow', 'orange', 'silver',
 ];
+  var isGameOngoing = false;
+  var startMatchTime;
+  var yourPlayerIndex=0;
 
         window.requestAnimFrame = (function () {
             return window.requestAnimationFrame ||
@@ -372,6 +375,8 @@ var playerColor = [
 
         }
 
+
+
         FB.Tree = function (x, y) {
 
             this.x = x;
@@ -593,14 +598,18 @@ var playerColor = [
             return (c1 || c2)
 
         };
-		
+		 function createCanvasController(canvas) {
+          var ctx = canvas.getContext("2d");
+          startMatchTime = new Date().getTime();
+console.log("createCanvasController for canvas.id=" + canvas.id);
 		window.Splash = function(){
 			
 			this.banner = new Image();
-			this.banner.src = "imgs/splash.png";
+			this.banner.src = "imgs/splash.gif";
 			
 			this.init = function(){
-				play_sound(soundSwoosh);
+            
+		play_sound(soundSwoosh);
 				FB.distance = 0;
                 FB.bg_grad = "day";
                 FB.entities = [];
@@ -628,7 +637,35 @@ var playerColor = [
 			}
 			
 			this.render = function(){
+               var secondsFromStart =
+      Math.floor((new Date().getTime() - startMatchTime) / 1000);
+      console.log(secondsFromStart);
 				FB.Draw.Image(this.banner,66,100);
+                if (secondsFromStart < 6) {
+     console.log("countdown");
+      // Draw countdown
+      var secondsToReallyStart = 6 - secondsFromStart;
+
+
+
+      // Gives you a hint what is your color
+      var yourColor = playerColor[yourPlayerIndex];
+      ctx.fillStyle = yourColor;
+      ctx.font = '1000px sans-serif';
+      //ctx.fillText(, canvasWidth / 2, canvasHeight / 2);
+
+      ctx.font = '20px sans-serif';
+      var msg = $translate("YOUR_BIRD_COLOR_IS",
+          {color: $translate(yourColor.toUpperCase())});
+      //ctx.fillText(msg, canvasWidth / 4 - 30, canvasHeight / 4 - 30);
+        //                  drawService.draw_prompt(ctx, yourPlayerIndex, secondsToReallyStart, level.level);
+
+    FB.Draw.text(msg,canvasWidth / 4 - 60, canvasHeight / 4 - 30, 20, playerColor[yourPlayerIndex] );
+
+      FB.Draw.text("" + secondsToReallyStart,canvasWidth / 2 , canvasHeight / 2 -40, 40, playerColor[yourPlayerIndex] );
+    
+      }
+        
 			}
 		
 		}
@@ -636,8 +673,11 @@ var playerColor = [
 		window.Play = function(){
 			
 			this.init = function(){			
-				 
-                
+				 console.log("In play init mode");
+                    if (!isGameOngoing) {
+      return;
+    }
+   
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2 + FB.WIDTH / 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 3, 50));
@@ -653,7 +693,7 @@ var playerColor = [
 			}
 			
 			this.update = function() { 
-				
+				console.log("In play update mode");
 				FB.distance += 1;
                 var levelUp = ((FB.distance % 2048) === 0) ? true : false;
                 if (levelUp) {
@@ -754,6 +794,16 @@ var playerColor = [
 						
 			    var that = this;
 				setTimeout(function() {
+           //         for (var i = 0; i < allScores.length; i++) {
+      ctx.font = '12px sans-serif';
+      var color = playerColor[0];
+      ctx.fillStyle = color;
+      var msg = $translate("COLOR_SCORE_IS",
+          {color: $translate(color.toUpperCase()), score: "" + that.getHighScore()});
+        // ctx.fillText(msg,
+        //   5 + 0 * canvasWidth, canvasHeight - 5);
+
+    //}
 					play_sound(soundDie);
 					that.banner = new Image();
 					that.banner.src = "imgs/scoreboard.png";
@@ -763,7 +813,9 @@ var playerColor = [
 					that.replay = new Image();
 					that.replay.src = "imgs/replay.png";
 					that.highscore = that.getHighScore() ;
+                 FB.Draw.text(msg,canvasWidth / 4 - 60, canvasHeight / 4 - 30, 30, playerColor[yourPlayerIndex] );
 				}, 500);
+           
 				
 			}
 			
@@ -794,12 +846,17 @@ var playerColor = [
 
         window.addEventListener('load', FB.init, false);
        
- function createCanvasController(canvas) {
+
      
-  function gotStartMatch(params) {resizeGameAreaService.setWidthToHeight(0.5);
+  function gotStartMatch(params) {
+     
+isGameOngoing = true;
+      resizeGameAreaService.setWidthToHeight(0.5);
 }
    function gotMessage(params) {}
-   function gotEndMatch(endMatchScores) {}
+   function gotEndMatch(endMatchScores) {
+           isGameOngoing = false;
+   }
        return {
     gotStartMatch: gotStartMatch,
     gotMessage: gotMessage,
