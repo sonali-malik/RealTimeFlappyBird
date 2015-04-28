@@ -11,7 +11,7 @@ http://yoav-zibin.github.io/emulator/dist/realTimeServices.min.js
 http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.min.js
 http://yoav-zibin.github.io/emulator/dist/gameServices.min.js
 http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js
-
+languages/en.js
 
 imgs/bird.png
 imgs/font_small_0.png
