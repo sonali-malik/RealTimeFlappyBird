@@ -95,7 +95,7 @@ module.exports = function(grunt) {
           network: ['dist/everything.min.js.map', 'dist/everything.js'],
           timestamp: true
         },
-        dest: 'game.appcache',
+        dest: 'index.appcache',
         src: []
       }
     },
