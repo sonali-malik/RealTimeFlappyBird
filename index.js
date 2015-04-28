@@ -637,12 +637,14 @@ console.log("createCanvasController for canvas.id=" + canvas.id);
 			}
 			
 			this.render = function(){
+           var meter = new FPSMeter(document.body );
+             meter.tick();
                var secondsFromStart =
       Math.floor((new Date().getTime() - startMatchTime) / 1000);
-      console.log(secondsFromStart);
+    //  console.log(secondsFromStart);
 				FB.Draw.Image(this.banner,66,100);
                 if (secondsFromStart < 6) {
-     console.log("countdown");
+    // console.log("countdown");
       // Draw countdown
       var secondsToReallyStart = 6 - secondsFromStart;
 
@@ -745,7 +747,7 @@ console.log("createCanvasController for canvas.id=" + canvas.id);
 			}
 			
 			this.render = function() { 
-             var meter = new FPSMeter(document.body );
+var meter = new FPSMeter(document.body );
              meter.tick();
 				//score				
 				var X = (FB.WIDTH/2-(FB.digits.length*14)/2);				
