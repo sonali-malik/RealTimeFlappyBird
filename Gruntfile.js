@@ -84,12 +84,14 @@ module.exports = function(grunt) {
           basePath: '.',
           cache: [
             'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
-            'http://yoav-zibin.github.io/emulator/dist/gameServices.min.js',
-            'http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js',
+            'http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.min.js',
+            'fpsMeter.min.js',
+            'dist/everything.min.js',
+            'http://yoav-zibin.github.io/emulator/dist/realTimeServices.2.min.js ',
             'imgs/bird.png', 'imgs/font_small_0.png', 'imgs/font_small_1.png','imgs/font_small_2.png', 'imgs/font_small_3.png', 'imgs/font_small_4.png', 'imgs/font_small_5.png', 'imgs/font_small_6.png', 'imgs/font_small_7.png', 'imgs/font_small_8.png', 'imgs/font_small_9.png', 'imgs/medal_gold.png', 'imgs/medal_bronze.png', 'imgs/medal_silver.png', 'imgs/medal_platinum.png', 'imgs/replay.png', 'imgs/scoreboard.png', 'imgs/splash.png',
             'audio/die.ogg','audio/hit.ogg','audio/point.ogg','audio/swooshing.ogg','audio/wing.ogg',
             'http://yoav-zibin.github.io/emulator/main.css', 
-            'dist/everything.min.js',
+            
             'style.css'
           ],
           network: ['dist/everything.min.js.map', 'dist/everything.js'],
