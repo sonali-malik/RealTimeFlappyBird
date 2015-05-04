@@ -1,4 +1,5 @@
- angular.module('myApp', [])
+angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
+ 
   .run(['$translate', '$log', 'realTimeService', 'randomService','resizeGameAreaService',
       function ($translate, $log, realTimeService, randomService, resizeGameAreaService) {
 'use strict';
@@ -10,6 +11,7 @@ var canvasHeight = 300;
 var playerIndex = null;
 var matchController = null;
  var startMatchTime;
+  var firstStart = true;
 //var d = new Date();
 //var curTime=d.getTime();
 var randomIndex= 1;
@@ -30,7 +32,7 @@ var playerColor = [
                 window.oRequestAnimationFrame ||
                 window.msRequestAnimationFrame ||
                 function (callback) {
-                    window.setTimeout(callback, 1000 / 60);
+                    window.setTimeout(callback, 1000);
             };
         })();
          //sounds
@@ -61,7 +63,7 @@ var playerColor = [
                 }
             }
         }
-		
+        
         function getCookie(cname)
         {
            var name = cname + "=";
@@ -79,7 +81,7 @@ var playerColor = [
            d.setTime(d.getTime()+(exdays*24*60*60*1000));
            var expires = "expires="+d.toGMTString();
            document.cookie = cname + "=" + cvalue + "; " + expires;
-        }	
+        }   
 
         var FB = null;
 
@@ -107,13 +109,13 @@ var playerColor = [
                 coins: 0
             },
             distance: 0,
-			digits:[],
-			fonts:[],
+            digits:[],
+            fonts:[],
             // we'll set the rest of these
             // in the init function
             RATIO: null,
             bg_grad: "day",
-			game:null,
+            game:null,
            // currentWidth: null,
             //currentHeight: null,
            // canvas: null,
@@ -122,7 +124,7 @@ var playerColor = [
             android: null,
             ios: null,
             gradients: {},
-            init: function () {
+            init: function (canvas) {
                 console.log('in init');
 
                 var grad;
@@ -132,7 +134,8 @@ var playerColor = [
                 FB.currentWidth = FB.WIDTH;
                 FB.currentHeight = FB.HEIGHT;
                 // this is our canvas element
-                FB.canvas = document.getElementsByTagName('canvas')[0];
+                //FB.canvas = document.getElementsByTagName('canvas')[0];
+                FB.canvas = canvas;
                 // it's important to set this
                 // otherwise the browser will
                 // default to 320x200
@@ -202,14 +205,14 @@ var playerColor = [
 
                 // we're ready to resize
              //   FB.resize();
-				FB.changeState("Splash");
+                FB.changeState("Splash");
                 
                 FB.loop();
 
             },
 
            
-			            
+                        
             // this is where all entities will be moved
             // and checked for collisions etc
             update: function () {
@@ -221,14 +224,14 @@ var playerColor = [
             render: function () {
 
                 FB.Draw.rect(0, 0, FB.WIDTH, FB.HEIGHT, FB.gradients[FB.bg_grad]);
-				 
+                 
                 // cycle through all entities and render to canvas
                 for (var i = 0; i < FB.entities.length; i += 1) {
                     FB.entities[i].render();
                 }
-					
-				FB.game.render();
-				
+                    
+                FB.game.render();
+                
             },
 
             // the actual loop
@@ -237,15 +240,15 @@ var playerColor = [
             // and render
             loop: function () {
 
-                requestAnimFrame(FB.loop);
+                //requestAnimFrame(FB.loop);
 
                 FB.update();
                 FB.render();
             },
-			changeState: function(state) {    				 
-				FB.game = new window[state]();
-				FB.game.init();
-			}
+            changeState: function(state) {                   
+                FB.game = new window[state]();
+                FB.game.init();
+            }
         };
 
 
@@ -269,9 +272,9 @@ var playerColor = [
                 FB.ctx.closePath();
                 FB.ctx.fill();
             },
-			Image:function(img,x,y){				
-				FB.ctx.drawImage(img,x,y);
-			},
+            Image:function(img,x,y){                
+                FB.ctx.drawImage(img,x,y);
+            },
             Sprite: function (img, srcX, srcY, srcW, srcH, destX, destY, destW, destH, r) {
                 FB.ctx.save();
                 FB.ctx.translate(destX, destY);
@@ -565,15 +568,15 @@ var playerColor = [
 
          // checks if two entities are touching
         FB.Collides = function (bird, pipe) {
-		
-			if(bird.vy >=370){				  
-				 
-				 return true;
-			}
+        
+            if(bird.vy >=370){                
+                 
+                 return true;
+            }
             if (pipe.coin && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
                 pipe.coin = false;
                 FB.score.coins += 1;
-				FB.digits = FB.score.coins.toString().split('');
+                FB.digits = FB.score.coins.toString().split('');
                 play_sound(soundScore);
             }
 
@@ -605,18 +608,18 @@ var playerColor = [
             return (c1 || c2)
 
         };
-		
-		window.Splash = function(){
-			
-			this.banner = new Image();
-			this.banner.src = "imgs/splash.png";
-			
-			this.init = function(){
-				play_sound(soundSwoosh);
-				FB.distance = 0;
+        
+        window.Splash = function(){
+            
+            this.banner = new Image();
+            this.banner.src = "imgs/splash.png";
+            
+            this.init = function(){
+                play_sound(soundSwoosh);
+                FB.distance = 0;
                 FB.bg_grad = "day";
                 FB.entities = [];
-				FB.score.taps = FB.score.coins = 0;
+                FB.score.taps = FB.score.coins = 0;
                 //Add entities
                 FB.entities.push(new FB.Cloud(30, ~~ (randomService.random(randomIndex) * FB.HEIGHT / 2)));
                 FB.entities.push(new FB.Cloud(130, ~~ (randomService.random(randomIndex) * FB.HEIGHT / 2)));
@@ -627,19 +630,19 @@ var playerColor = [
                 FB.entities.push(new FB.Tree(~~(randomService.random(randomIndex) * FB.WIDTH), FB.HEIGHT - 160));
                 FB.entities.push(new FB.Tree(~~(randomService.random(randomIndex) * FB.WIDTH + 50), FB.HEIGHT - 160));
                 FB.entities.push(new FB.Tree(~~(randomService.random(randomIndex) * FB.WIDTH + 100), FB.HEIGHT - 160));
-			}
-			
-			this.update = function(){
-				for (var i = 0; i < FB.entities.length; i += 1) {
+            }
+            
+            this.update = function(){
+                for (var i = 0; i < FB.entities.length; i += 1) {
                     FB.entities[i].update();                    
                 }
-				if (FB.Input.tapped) {
-					//FB.changeState('Play');
-					FB.Input.tapped = false;
-				}
-			}
-			
-			this.render = function(){ 
+                if (FB.Input.tapped) {
+                    //FB.changeState('Play');
+                    FB.Input.tapped = false;
+                }
+            }
+            
+            this.render = function(){ 
              var meter = new FPSMeter(document.body );
              meter.tick();
                var secondsFromStart =
@@ -649,7 +652,7 @@ var playerColor = [
                 if (secondsFromStart < 6) {
     // console.log("countdown");
       // Draw countdown
-      var secondsToReallyStart = 3 - secondsFromStart;
+      var secondsToReallyStart = 4 - secondsFromStart;
 
 
 
@@ -666,14 +669,14 @@ var playerColor = [
       FB.Draw.text("" + secondsToReallyStart,canvasWidth / 2 , canvasHeight / 2 -40, 40, yourColor);
     
       }
-			}
-		
-		}
-		
-		window.Play = function(){
-			
-			this.init = function(){			
-				 
+            }
+        
+        }
+        
+        window.Play = function(){
+            
+            this.init = function(){         
+                 
                 
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2 + FB.WIDTH / 2, 50));
@@ -681,17 +684,17 @@ var playerColor = [
 
                 FB.bird = new FB.Bird();
                 FB.entities.push(FB.bird);
-				for(var n=0;n<10;n++){
-					var img = new Image();
-					img.src = "imgs/font_small_" + n +'.png';
-					FB.fonts.push(img);
-				}
-				FB.digits = ["0"];
-			}
-			
-			this.update = function() { 
-				
-				FB.distance += 1;
+                for(var n=0;n<10;n++){
+                    var img = new Image();
+                    img.src = "imgs/font_small_" + n +'.png';
+                    FB.fonts.push(img);
+                }
+                FB.digits = ["0"];
+            }
+            
+            this.update = function() { 
+                
+                FB.distance += 1;
                 var levelUp = ((FB.distance % 2048) === 0) ? true : false;
                 if (levelUp) {
                     var bg = "day";
@@ -733,112 +736,118 @@ var playerColor = [
                     if (FB.entities[i].type === 'pipe') {
                         var hit = FB.Collides(FB.bird, FB.entities[i]);
                         if (hit) {
-                            play_sound(soundHit);
-							FB.changeState('GameOver');
-							 break;
+                         //   play_sound(soundHit);
+                            FB.changeState('GameOver');
+                             break;
                         }
                     }
                 }
-			}
-			
-			this.render = function() { 
-              var meter = new FPSMeter(document.body );
-             meter.tick();  
-				//score				
-				var X = (FB.WIDTH/2-(FB.digits.length*14)/2);				
-				for(var i = 0; i < FB.digits.length; i++)
-				{
-				  FB.Draw.Image(FB.fonts[Number(FB.digits[i])],X+(i*14),10);
-				}
-			}
-		
-		}
-		
-		window.GameOver = function(){
-			var score = FB.score.coins;
-			this.getMedal = function()
-			{
+            }
+            
+            this.render = function() { 
+             //  var meter = new FPSMeter(document.body );
+             // meter.tick();  
+                //score             
+                var X = (FB.WIDTH/2-(FB.digits.length*14)/2);               
+                for(var i = 0; i < FB.digits.length; i++)
+                {
+                  FB.Draw.Image(FB.fonts[Number(FB.digits[i])],X+(i*14),10);
+                }
+            }
+        
+        }
+        
+        window.GameOver = function(){
+            var score = FB.score.coins;
+                           
+
+            this.getMedal = function()
+            {
              var medal;
-			   
-			   console.log('score=',score);
-			   if(score <= 10)
-				  medal = "bronze";
-			   if(score >= 20)
-				  medal = "silver";
-			   if(score >= 30)
-				  medal = "gold";
-			   if(score >= 40)
-				  medal = "platinum";
-			
-				return medal;
-			}
-			this.getHighScore = function(){
-				var savedscore = getCookie("highscore");
-			    if(savedscore != ""){
-					var hs = parseInt(savedscore) || 0;
-					if(hs < FB.score.coins)
-					{
-					 hs = FB.score.coins
-					 setCookie("highscore", hs, 999);
-					}
-					return hs;
-				  }
-				  else
-				  {					 
-					setCookie("highscore", FB.score.coins, 999);
-					return  FB.score.coins;
-				  }
-			}
-			this.init = function(){
-						
-			    var that = this;
-				setTimeout(function() {
+               
+               console.log('score=',score);
+               if(score <= 10)
+                  medal = "bronze";
+               if(score >= 20)
+                  medal = "silver";
+               if(score >= 30)
+                  medal = "gold";
+               if(score >= 40)
+                  medal = "platinum";
+            
+                return medal;
+            }
+            this.getHighScore = function(){
+                var savedscore = getCookie("highscore");
+                if(savedscore != ""){
+                    var hs = parseInt(savedscore) || 0;
+                    if(hs < FB.score.coins)
+                    {
+                     hs = FB.score.coins
+                     setCookie("highscore", hs, 999);
+                    }
+                    return hs;
+                  }
+                  else
+                  {                  
+                    setCookie("highscore", FB.score.coins, 999);
+                    return  FB.score.coins;
+                  }
+            }
+            this.init = function(){
+                        
+                var that = this;
+                setTimeout(function() {
                      var color = playerColor[0];
      // ctx.fillStyle = color;
       var msg = $translate("COLOR_SCORE_IS",
           {color: $translate(color.toUpperCase()), score: "" + that.getHighScore()});
 
-					play_sound(soundDie);
-					that.banner = new Image();
-					that.banner.src = "imgs/scoreboard.png";
-					var m = that.getMedal();
-					that.medal =  new Image();
-					that.medal.src = 'imgs/medal_' + m +'.png';
-					that.replay = new Image();
-					that.replay.src = "imgs/replay.png";
-					that.highscore = that.getHighScore() ;
+                    play_sound(soundDie);
+                    that.banner = new Image();
+                    that.banner.src = "imgs/scoreboard.png";
+                    var m = that.getMedal();
+                    that.medal =  new Image();
+                    that.medal.src = 'imgs/medal_' + m +'.png';
+                    that.replay = new Image();
+                    that.replay.src = "imgs/replay.png";
+                    that.highscore = that.getHighScore() ;
              FB.Draw.text(msg,canvasWidth / 4 - 60, canvasHeight / 4 - 30, 30, color );
                 }, 500);
-				
-			}
-			
-			this.update = function(){				
-				if (FB.Input.tapped) {
-					var x = FB.Input.x;
-					var y = FB.Input.y;
-					
-					 if((x >= 102.5 && x <= 102.5+115) && (y >= 260 && y <= 260+70)){       
-						FB.changeState('Splash');
-					}
-					FB.Input.tapped = false;
-				}
-				FB.bird.update();
-			}
-			
-			this.render = function(){
-			 
-            	if(this.banner){
-					FB.Draw.Image(this.banner,42,70);
-					FB.Draw.Image(this.medal,75,183);
-				//	FB.Draw.Image(this.replay,102.5,260);
-					FB.Draw.text(FB.score.coins, 220, 185, 15, 'black');
-					FB.Draw.text(this.highscore, 220, 225, 15, 'black');
-				}
-                matchController.endMatch([score]);
-			}
+                
+            }
+            
+            this.update = function(){               
+                if (FB.Input.tapped) {
+                    var x = FB.Input.x;
+                    var y = FB.Input.y;
+                    
+                     if((x >= 102.5 && x <= 102.5+115) && (y >= 260 && y <= 260+70)){       
+                        FB.changeState('Splash');
+                    }
+                    FB.Input.tapped = false;
+                }
+                FB.bird.update();
+                
+            }
+            
+            this.render = function(){
              
-		
-		}
+                if(this.banner){
+                    FB.Draw.Image(this.banner,42,70);
+                    FB.Draw.Image(this.medal,75,183);
+                //  FB.Draw.Image(this.replay,102.5,260);
+                    FB.Draw.text(FB.score.coins, 220, 185, 15, 'black');
+                    FB.Draw.text(this.highscore, 220, 225, 15, 'black');
+                }
+                setTimeout(function(){
+                 
+                },3000);
+            }
+                                 matchController.endMatch([score]);
+
+        
+        }
 
      //   window.addEventListener('load', FB.init, false);
        
@@ -862,12 +871,31 @@ var playerColor = [
 
     $log.info("gotStartMatch:", params);
     //Starts the match
-    FB.init();
     resizeGameAreaService.setWidthToHeight(0.5);
-    setTimeout(function(){
-        FB.changeState('Play');
+    if(firstStart){
+        FB.init(canvas);
+        firstStart = false;
+
+    setTimeout(function(
+    ){FB.changeState('Play');
                     FB.Input.tapped = false;
-    },3000);
+    setDrawInterval();},2000);
+    }
+    else {
+        setTimeout(function(
+    ){
+            FB.init(canvas);
+            
+           },2000);
+        setTimeout(function(
+    ){
+            
+            
+            FB.changeState('Play');
+                    FB.Input.tapped = false;
+    setDrawInterval();},5000);
+    }
+    
     
 
 
@@ -877,6 +905,20 @@ var playerColor = [
     // allScores = endMatchScores;
     isGameOngoing = false;
    }
+
+     var drawInterval;
+
+  function setDrawInterval() {
+    stopDrawInterval();
+    // Every 2 food pieces we increase the snake speed (to a max speed of 50ms interval).
+   // var intervalMillis = Math.max(50, drawEveryMilliseconds - 10 * Math.floor(foodCreatedNum / 2));
+    drawInterval = setInterval(FB.loop, 1000/60);
+  }
+
+  function stopDrawInterval() {
+    clearInterval(drawInterval);
+  }
+
        return {
     gotStartMatch: gotStartMatch,
     gotMessage: gotMessage,

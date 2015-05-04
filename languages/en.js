@@ -1,6 +1,11 @@
 window.angularTranslationsLoaded('en',{
-"YOUR_BIRD_COLOR_IS":"Your bird color is {{color}}",
+"YOUR_BIRD_COLOR_IS":"Your bird's color is {{color}}",
 "COLOR_SCORE_IS":"{{color}}: {{score}}",
+"RULES_OF_LINESOFACTIONS":"Rules of Flappy Bird",
+"RULES_SLIDE1":"The objective is to direct a flying bird,continuously to the right, between sets of pipes.",
+"RULES_SLIDE2":"If the player touches the pipes, they end the game",
+"RULES_SLIDE3":"The bird briefly flaps upward each time that the player taps the screen; if the screen is not tapped, the bird falls because of gravity.",
+"RULES_SLIDE4":"The player is scored based on the number of pipes that the bird successfully passes through, with medals awarded for the score at the end of the game",
 "BLUE":"Blue",
 "RED":"Red",
 "BROWN":"Brown",
@@ -12,5 +17,6 @@ window.angularTranslationsLoaded('en',{
 "WHITE":"White",
 "BLACK":"Black",
 "GREEN":"Green",
-"CYAN":"Cyan"
+"CYAN":"Cyan",
+"CLOSE":"Close"
 });
