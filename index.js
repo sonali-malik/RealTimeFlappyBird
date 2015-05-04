@@ -742,7 +742,6 @@ var playerColor = [
                         }
                     }
                 }
-<<<<<<< HEAD
             }
             
             this.render = function() { 
@@ -764,27 +763,6 @@ var playerColor = [
 
             this.getMedal = function()
             {
-=======
-			}
-			
-			this.render = function() { 
-             //  var meter = new FPSMeter(document.body );
-             // meter.tick();  
-				//score				
-				var X = (FB.WIDTH/2-(FB.digits.length*14)/2);				
-				for(var i = 0; i < FB.digits.length; i++)
-				{
-				  FB.Draw.Image(FB.fonts[Number(FB.digits[i])],X+(i*14),10);
-				}
-			}
-		
-		}
-		
-		window.GameOver = function(){
-			var score = FB.score.coins;
-			this.getMedal = function()
-			{
->>>>>>> origin/gh-pages
              var medal;
                
                console.log('score=',score);
