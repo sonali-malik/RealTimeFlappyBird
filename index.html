@@ -130,16 +130,16 @@ window.addEventListener('load',function(){
   var openb = document.getElementById('openb');
   var closeb = document.getElementById('closeb');
   var closeb1 = document.getElementById('closeb1');  
-  openb.addEventListener('touchstart', function(e){
-        e.preventDefault();
-        
-    }, false)
+  // openb.addEventListener('touchstart', function(e){
+  //       e.preventDefault();
+  //       window.isGameOngoing = false;
+  //   }, false)
  
-    openb.addEventListener('touchmove', function(e){
+  //   openb.addEventListener('touchmove', function(e){
         
-        e.preventDefault()
-       
-    }, false)
+  //       e.preventDefault()
+  //      window.isGameOngoing = false;
+  //   }, false)
  
     openb.addEventListener('touchend', function(e){
         
@@ -147,16 +147,16 @@ window.addEventListener('load',function(){
         window.isGameOngoing = false;
     }, false)
 
-    closeb.addEventListener('touchstart', function(e){
-        e.preventDefault();
+    // closeb.addEventListener('touchstart', function(e){
+    //     e.preventDefault();
         
-    }, false)
+    // }, false)
  
-    closeb.addEventListener('touchmove', function(e){
+    // closeb.addEventListener('touchmove', function(e){
         
-        e.preventDefault()
+    //     e.preventDefault()
         
-    }, false)
+    // }, false)
  
     closeb.addEventListener('touchend', function(e){
         
@@ -164,16 +164,16 @@ window.addEventListener('load',function(){
         window.isGameOngoing = true;
     }, false)
 
-    closeb1.addEventListener('touchstart', function(e){
-        e.preventDefault();
+    // closeb1.addEventListener('touchstart', function(e){
+    //     e.preventDefault();
         
-    }, false)
+    // }, false)
  
-    closeb1.addEventListener('touchmove', function(e){
+    // closeb1.addEventListener('touchmove', function(e){
         
-        e.preventDefault()
+    //     e.preventDefault()
         
-    }, false)
+    // }, false)
  
     closeb1.addEventListener('touchend', function(e){
         
