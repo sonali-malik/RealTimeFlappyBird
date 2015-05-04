@@ -29,12 +29,12 @@
   <!-- build:js http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.min.js -->
   <script crossorigin="anonymous" src="http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.js"></script>
   <!-- /build -->
-<script crossorigin="anonymous" src="fpsMeter.min.js"></script>
+<script  src="fpsMeter.min.js"></script>
   <!-- build:js index.min.js -->
-  <script crossorigin="anonymous" src="index.js"></script>
+  <script  src="index.js"></script>
   <!-- /build -->
 
-<script>window.angularTranslationLanguages = ['en', 'he'];</script>
+<script>window.angularTranslationLanguages = ['en', 'hn'];</script>
 <!-- build:js http://yoav-zibin.github.io/emulator/dist/realTimeServices.2.min.js.min.js -->
 <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/realTimeServices.2.js"></script>
 <!-- /build -->
@@ -48,7 +48,7 @@
 
    <div style="position:absolute; bottom:5px; left: 5px">
     <span ng-click="isHelpModalShown = true"
-        class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+        class="glyphicon glyphicon-question-sign" aria-hidden="true" onclick="window.isGameOngoing = false;"></span>
   </div>
 
  <div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
@@ -56,7 +56,7 @@
     <div class="modal-dialog">
      <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" ng-click="isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" ng-click="isHelpModalShown = false" aria-label="Close" onclick="window.isGameOngoing = true; "><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">
             {{ 'RULES_OF_LINESOFACTIONS' | translate }}
           </h4>
@@ -115,7 +115,7 @@
           </carousel>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="isHelpModalShown = false">
+          <button type="button" class="btn btn-primary" ng-click="isHelpModalShown = false" onclick="window.isGameOngoing = true; ">
             {{ 'CLOSE' | translate }}
           </button>
         </div>

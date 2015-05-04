@@ -18,5 +18,5 @@ window.angularTranslationsLoaded('hn',{
 "BLACK":"काली",
 "GREEN":"हरा",
 "CYAN":"सियान",
-"CLOSE":"पास"
+"CLOSE":"बंद"
 });
