@@ -177,13 +177,13 @@ var playerColor = [
                 FB.gradients.night = grad;
 
                 // listen for clicks
-                FB.canvas.addEventListener('click', function (e) {
+                window.addEventListener('click', function (e) {
                     e.preventDefault();
                     FB.Input.set(e);
                 }, false);
 
                 // listen for touches
-                FB.canvas.addEventListener('touchstart', function (e) {
+                window.addEventListener('touchstart', function (e) {
                     e.preventDefault();
                     // the event object has an array
                     // called touches, we just want
@@ -191,14 +191,14 @@ var playerColor = [
                     console.log('touch=',e.touches[0]);
                     FB.Input.set(e.touches[0]);
                 }, false);
-                FB.canvas.addEventListener('touchmove', function (e) {
+                window.addEventListener('touchmove', function (e) {
                     // we're not interested in this
                     // but prevent default behaviour
                     // so the screen doesn't scroll
                     // or zoom
                     e.preventDefault();
                 }, false);
-                FB.canvas.addEventListener('touchend', function (e) {
+                window.addEventListener('touchend', function (e) {
                     // as above
                     e.preventDefault();
                 }, false);
@@ -241,9 +241,7 @@ var playerColor = [
             loop: function () {
 
                 //requestAnimFrame(FB.loop);
-                if(!isGameOngoing) {
-                    return;
-                }
+
                 FB.update();
                 FB.render();
             },
@@ -855,7 +853,7 @@ var playerColor = [
        
  function createCanvasController(canvas) {
    
-   window.isGameOngoing = false;
+   var isGameOngoing = false;
    var playersInfo = null;
   var yourPlayerIndex = null;
   
