@@ -6,12 +6,20 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
 
 
 // Constants
+var playersInfo = null;
+  var yourPlayerIndex = null;
+  
+  var isSinglePlayer = false;  
+
 var canvasWidth = 300;
 var canvasHeight = 300;
 var playerIndex = null;
 var matchController = null;
  var startMatchTime;
   var firstStart = true;
+   var allScores;
+   var allBirds; // allBirds[playerIndex]  is the snake of playerIndex
+  var bird_array; // points to allBirds[yourPlayerIndex]
 //var d = new Date();
 //var curTime=d.getTime();
 var randomIndex= 1;
@@ -24,6 +32,8 @@ var playerColor = [
   'blue', 'red', 'brown', 'purple',
   'pink', 'yellow', 'orange', 'silver',
 ];
+var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png','imgs/bird_purple.png',
+'imgs/bird_pink.png','imgs/bird_yellow.png','imgs/bird_orange.png','imgs/bird_silver.png']
 
         window.requestAnimFrame = (function () {
             return window.requestAnimationFrame ||
@@ -84,7 +94,8 @@ var playerColor = [
         }   
 
         
-        function createFB(){
+        var FB = null;
+
 
          // namespace our game
         var FB = {
@@ -249,7 +260,7 @@ var playerColor = [
                 FB.render();
             },
             changeState: function(state) {                   
-                FB.game = new window[state](FB);
+                FB.game = new window[state]();
                 FB.game.init();
             }
         };
@@ -463,17 +474,17 @@ var playerColor = [
             this.centerY = this.randomIntFromInterval(70, 220);
         }
 
-        FB.Bird = function () {
+        FB.Bird = function (playerIndex) {
 
             this.img = new Image();
-            this.img.src = 'imgs/bird.png';
+            this.img.src = colorImgSrc[playerIndex];
             this.gravity = 0.25;
             this.width = 34;
             this.height = 24;
             this.ix = 0;
             this.iy = 0;
             this.fr = 0;
-            this.vy = 180;
+            this.vy = 180+playerIndex*10;
             this.vx = 70;
             this.velocity = 0;
             this.play = false;
@@ -611,18 +622,8 @@ var playerColor = [
             return (c1 || c2)
 
         };
-            return FB;
-        }
-
-        function createCanvasController(canvas) {
-   
-   window.isGameOngoing = false;
-   var playersInfo = null;
-  var yourPlayerIndex = null;
-  
-  var isSinglePlayer = false;  
- 
-        window.Splash = function(FB){
+        
+        window.Splash = function(){
             
             this.banner = new Image();
             this.banner.src = "imgs/splash.png";
@@ -686,7 +687,7 @@ var playerColor = [
         
         }
         
-        window.Play = function(FB){
+        window.Play = function(){
             
             this.init = function(){         
                  
@@ -694,9 +695,14 @@ var playerColor = [
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2 + FB.WIDTH / 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 3, 50));
+                FB.bird = [];
+                for(var i=0; i < playersInfo.length; i++){
 
-                FB.bird = new FB.Bird();
-                FB.entities.push(FB.bird);
+                    FB.bird[i] = new FB.Bird(i);    
+                    FB.entities.push(FB.bird[i]);
+                }
+                
+                
                 for(var n=0;n<10;n++){
                     var img = new Image();
                     img.src = "imgs/font_small_" + n +'.png';
@@ -747,12 +753,15 @@ var playerColor = [
                 for (i = 0; i < FB.entities.length; i += 1) {
                     FB.entities[i].update();
                     if (FB.entities[i].type === 'pipe') {
-                        var hit = FB.Collides(FB.bird, FB.entities[i]);
+                        for (var j = 0;j<playersInfo.length; j++){
+                            var hit = FB.Collides(FB.bird[j], FB.entities[i]);
                         if (hit) {
                          //   play_sound(soundHit);
                             FB.changeState('GameOver');
                              break;
+                        }    
                         }
+                        
                     }
                 }
             }
@@ -770,7 +779,7 @@ var playerColor = [
         
         }
         
-        window.GameOver = function(FB){
+        window.GameOver = function(){
             var score = FB.score.coins;
                            
 
@@ -840,7 +849,10 @@ var playerColor = [
                     }
                     FB.Input.tapped = false;
                 }
-                FB.bird.update();
+                for(var i=0; i<playersInfo.length; i++){
+                    FB.bird[i].update();    
+                }
+                
                 
             }
             
@@ -864,9 +876,13 @@ var playerColor = [
 
      //   window.addEventListener('load', FB.init, false);
        
-  var FB1;
+ function createCanvasController(canvas) {
+   
+   window.isGameOngoing = false;
+   
 
   function gotStartMatch(params) {
+
     yourPlayerIndex = params.yourPlayerIndex;
     playersInfo = params.playersInfo;
     matchController = params.matchController;
@@ -874,33 +890,33 @@ var playerColor = [
     isSinglePlayer = playersInfo.length === 1;
     startMatchTime = new Date().getTime();
 
+     allBirds = [];
+    allScores = [];
 
     $log.info("gotStartMatch:", params);
     //Starts the match
     resizeGameAreaService.setWidthToHeight(0.5);
-     FB1 = createFB();
     if(firstStart){
-       
-        FB1.init(canvas);
-   //     firstStart = false;
+        FB.init(canvas);
+        firstStart = false;
 
     setTimeout(function(
-    ){FB1.changeState('Play');
-                    FB1.Input.tapped = false;
+    ){FB.changeState('Play');
+                    FB.Input.tapped = false;
     setDrawInterval();},2000);
     }
     else {
         setTimeout(function(
     ){
-            FB1.init(canvas);
+            FB.init(canvas);
             
            },2000);
         setTimeout(function(
     ){
             
             
-            FB1.changeState('Play');
-                   FB1.Input.tapped = false;
+            FB.changeState('Play');
+                    FB.Input.tapped = false;
     setDrawInterval();},5000);
     }
     
@@ -920,7 +936,7 @@ var playerColor = [
     stopDrawInterval();
     // Every 2 food pieces we increase the snake speed (to a max speed of 50ms interval).
    // var intervalMillis = Math.max(50, drawEveryMilliseconds - 10 * Math.floor(foodCreatedNum / 2));
-    drawInterval = setInterval(FB1.loop, 1000/60);
+    drawInterval = setInterval(FB.loop, 1000/60);
   }
 
   function stopDrawInterval() {

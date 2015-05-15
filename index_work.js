@@ -83,9 +83,9 @@ var playerColor = [
            document.cookie = cname + "=" + cvalue + "; " + expires;
         }   
 
-        
-        function createFB(){
+        var FB = null;
 
+      
          // namespace our game
         var FB = {
             // set up some inital values
@@ -102,8 +102,8 @@ var playerColor = [
             entities: [],
             currentWidth: null,
             currentHeight: null,
-            canvas: null,
-            ctx: null,
+            canvas:null,
+            ctx:null,
             score: {
                 taps: 0,
                 coins: 0
@@ -216,6 +216,7 @@ var playerColor = [
             // this is where all entities will be moved
             // and checked for collisions etc
             update: function () {
+                //FB.ctx = canvas.getContext('2d');
                 FB.game.update();
                 FB.Input.tapped = false;
             },
@@ -249,7 +250,7 @@ var playerColor = [
                 FB.render();
             },
             changeState: function(state) {                   
-                FB.game = new window[state](FB);
+                FB.game = new FB.canvas[state](FB);
                 FB.game.init();
             }
         };
@@ -261,14 +262,17 @@ var playerColor = [
         FB.Draw = {
 
             clear: function () {
+                //FB.ctx = canvas.getContext('2d');
                 FB.ctx.clearRect(0, 0, FB.WIDTH, FB.HEIGHT);
             },
 
             rect: function (x, y, w, h, col) {
+                //FB.ctx = canvas.getContext('2d'),
                 FB.ctx.fillStyle = col;
                 FB.ctx.fillRect(x, y, w, h);
             },
             circle: function (x, y, r, col) {
+                //FB.ctx = canvas.getContext('2d');
                 FB.ctx.fillStyle = col;
                 FB.ctx.beginPath();
                 FB.ctx.arc(x + 5, y + 5, r, 0, Math.PI * 2, true);
@@ -276,9 +280,11 @@ var playerColor = [
                 FB.ctx.fill();
             },
             Image:function(img,x,y){                
+                //FB.ctx = canvas.getContext('2d');
                 FB.ctx.drawImage(img,x,y);
             },
             Sprite: function (img, srcX, srcY, srcW, srcH, destX, destY, destW, destH, r) {
+                //FB.ctx = canvas.getContext('2d');
                 FB.ctx.save();
                 FB.ctx.translate(destX, destY);
                 FB.ctx.rotate(r * (Math.PI / 180));
@@ -287,6 +293,7 @@ var playerColor = [
                 FB.ctx.restore();
             },
             semiCircle: function (x, y, r, col) {
+               // FB.ctx = canvas.getContext('2d');
                 FB.ctx.fillStyle = col;
                 FB.ctx.beginPath();
                 FB.ctx.arc(x, y, r, 0, Math.PI, false);
@@ -295,6 +302,7 @@ var playerColor = [
             },
 
             text: function (string, x, y, size, col) {
+               // FB.ctx = canvas.getContext('2d');
                 FB.ctx.font = 'bold ' + size + 'px Monospace';
                 FB.ctx.fillStyle = col;
                 FB.ctx.fillText(string, x, y);
@@ -611,19 +619,16 @@ var playerColor = [
             return (c1 || c2)
 
         };
-            return FB;
-        }
-
         function createCanvasController(canvas) {
    
    window.isGameOngoing = false;
    var playersInfo = null;
   var yourPlayerIndex = null;
-  
+  var mycanvas = canvas;
   var isSinglePlayer = false;  
- 
-        window.Splash = function(FB){
-            
+   
+        canvas.Splash = function(){
+            FB.ctx  = mycanvas.getContext('2d');
             this.banner = new Image();
             this.banner.src = "imgs/splash.png";
             
@@ -631,6 +636,7 @@ var playerColor = [
                 play_sound(soundSwoosh);
                 FB.distance = 0;
                 FB.bg_grad = "day";
+                //FB.ctx = canvas.getContext('2d');
                 FB.entities = [];
                 FB.score.taps = FB.score.coins = 0;
                 //Add entities
@@ -686,8 +692,8 @@ var playerColor = [
         
         }
         
-        window.Play = function(FB){
-            
+        canvas.Play = function(){
+            FB.ctx  = mycanvas.getContext('2d');
             this.init = function(){         
                  
                 
@@ -705,7 +711,7 @@ var playerColor = [
                 FB.digits = ["0"];
             }
             
-            this.update = function() { 
+            canvas.update = function() { 
                 
                 FB.distance += 1;
                 var levelUp = ((FB.distance % 2048) === 0) ? true : false;
@@ -770,7 +776,8 @@ var playerColor = [
         
         }
         
-        window.GameOver = function(FB){
+         canvas.GameOver = function(){
+            FB.ctx  = mycanvas.getContext('2d');
             var score = FB.score.coins;
                            
 
@@ -864,7 +871,7 @@ var playerColor = [
 
      //   window.addEventListener('load', FB.init, false);
        
-  var FB1;
+  
 
   function gotStartMatch(params) {
     yourPlayerIndex = params.yourPlayerIndex;
@@ -878,29 +885,27 @@ var playerColor = [
     $log.info("gotStartMatch:", params);
     //Starts the match
     resizeGameAreaService.setWidthToHeight(0.5);
-     FB1 = createFB();
     if(firstStart){
-       
-        FB1.init(canvas);
-   //     firstStart = false;
+        FB.init(canvas);
+        firstStart = false;
 
     setTimeout(function(
-    ){FB1.changeState('Play');
-                    FB1.Input.tapped = false;
+    ){FB.changeState('Play');
+                    FB.Input.tapped = false;
     setDrawInterval();},2000);
     }
     else {
         setTimeout(function(
     ){
-            FB1.init(canvas);
+            FB.init(canvas);
             
            },2000);
         setTimeout(function(
     ){
             
             
-            FB1.changeState('Play');
-                   FB1.Input.tapped = false;
+            FB.changeState('Play');
+                    FB.Input.tapped = false;
     setDrawInterval();},5000);
     }
     
@@ -920,7 +925,7 @@ var playerColor = [
     stopDrawInterval();
     // Every 2 food pieces we increase the snake speed (to a max speed of 50ms interval).
    // var intervalMillis = Math.max(50, drawEveryMilliseconds - 10 * Math.floor(foodCreatedNum / 2));
-    drawInterval = setInterval(FB1.loop, 1000/60);
+    drawInterval = setInterval(FB.loop, 1000/60);
   }
 
   function stopDrawInterval() {

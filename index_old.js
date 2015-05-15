@@ -81,7 +81,7 @@ var playerColor = [
            var expires = "expires="+d.toGMTString();
            document.cookie = cname + "=" + cvalue + "; " + expires;
         }	
-
+        function createFB(){
          // namespace our game
         var FB = {
             // set up some inital values
@@ -120,7 +120,7 @@ var playerColor = [
             android: null,
             ios: null,
             gradients: {},
-            init: function () {
+            init: function (canvas) {
                 var grad;
                 // the proportion of width to height
                 FB.RATIO = FB.WIDTH / FB.HEIGHT;
@@ -237,12 +237,12 @@ var playerColor = [
                 FB.render();
             },
 			changeState: function(state) {    				 
-				FB.game = new window[state]();
+				FB.game = new window[state](FB);
 				FB.game.init();
 			}
         };
 
-         // abstracts various canvas operations into
+        // abstracts various canvas operations into
          // standalone functions
         FB.Draw = {
 
@@ -261,9 +261,9 @@ var playerColor = [
                 FB.ctx.closePath();
                 FB.ctx.fill();
             },
-			Image:function(img,x,y){				
-				FB.ctx.drawImage(img,x,y);
-			},
+            Image:function(img,x,y){                
+                FB.ctx.drawImage(img,x,y);
+            },
             Sprite: function (img, srcX, srcY, srcW, srcH, destX, destY, destW, destH, r) {
                 FB.ctx.save();
                 FB.ctx.translate(destX, destY);
@@ -559,15 +559,15 @@ var playerColor = [
 
          // checks if two entities are touching
         FB.Collides = function (bird, pipe) {
-		
-			if(bird.vy >=370){				  
-				 
-				 return true;
-			}
+        
+            if(bird.vy >=370){                
+                 
+                 return true;
+            }
             if (pipe.coin && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
                 pipe.coin = false;
                 FB.score.coins += 1;
-				FB.digits = FB.score.coins.toString().split('');
+                FB.digits = FB.score.coins.toString().split('');
                 play_sound(soundScore);
             }
 
@@ -599,6 +599,9 @@ var playerColor = [
             return (c1 || c2)
 
         };
+        return FB;
+    }
+         
 		       
  function createCanvasController(canvas) {
    
@@ -610,7 +613,7 @@ var playerColor = [
     //      var ctx = canvas.getContext("2d");
           startMatchTime = new Date().getTime();
 //console.log("createCanvasController for canvas.id=" + canvas.id);
-		window.Splash = function(){
+		window.Splash = function(FB){
 			
 			this.banner = new Image();
 			this.banner.src = "imgs/splash.gif";
@@ -676,7 +679,7 @@ var playerColor = [
 		
 		}
 		
-		window.Play = function(){
+		window.Play = function(FB){
 			
 			this.init = function(){			
 				//  console.log("In play init mode");
@@ -763,7 +766,7 @@ var meter = new FPSMeter(document.body );
 		
 		}
 		
-		window.GameOver = function(){
+		window.GameOver = function(FB){
 			var score = FB.score.coins;
 			this.getMedal = function()
 			{
@@ -868,10 +871,14 @@ var meter = new FPSMeter(document.body );
 
     $log.info("gotStartMatch:", params);
     //Starts the match
-    FB.init();
+    if(yourPlayerIndex == 1){
+        console.log('PI=1');
+    }
+    var FB1 = createFB();
+    FB1.init(canvas);
     resizeGameAreaService.setWidthToHeight(0.5);
     setTimeout(function(){
-        FB.changeState('Play');
+        FB1.changeState('Play');
                     FB.Input.tapped = false;
     },3000);
     
