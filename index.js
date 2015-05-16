@@ -11,6 +11,7 @@ var canvasHeight = 300;
 var playerIndex = null;
 var matchController = null;
  var startMatchTime;
+ var playersInfo = [];
   var firstStart = true;
 //var d = new Date();
 //var curTime=d.getTime();
@@ -24,6 +25,8 @@ var playerColor = [
   'blue', 'red', 'brown', 'purple',
   'pink', 'yellow', 'orange', 'silver',
 ];
+var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png','imgs/bird_purple.png',
+'imgs/bird_pink.png','imgs/bird_yellow.png','imgs/bird_orange.png','imgs/bird_silver.png'];
 
         window.requestAnimFrame = (function () {
             return window.requestAnimationFrame ||
@@ -463,17 +466,17 @@ var playerColor = [
             this.centerY = this.randomIntFromInterval(70, 220);
         }
 
-        FB.Bird = function () {
+        FB.Bird = function (playerIndex) {
 
             this.img = new Image();
-            this.img.src = 'imgs/bird.png';
+            this.img.src = colorImgSrc[playerIndex];
             this.gravity = 0.25;
             this.width = 34;
             this.height = 24;
             this.ix = 0;
             this.iy = 0;
             this.fr = 0;
-            this.vy = 180;
+            this.vy = 180+(20*playerIndex);
             this.vx = 70;
             this.velocity = 0;
             this.play = false;
@@ -617,8 +620,8 @@ var playerColor = [
         function createCanvasController(canvas) {
    
    window.isGameOngoing = false;
-   var playersInfo = null;
-  var yourPlayerIndex = null;
+   
+  var yourPlayerIndex = 0;
   
   var isSinglePlayer = false;  
  
@@ -689,14 +692,24 @@ var playerColor = [
         window.Play = function(FB){
             
             this.init = function(){         
-                 
+                 console.log('started playing');
                 
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 2 + FB.WIDTH / 2, 50));
                 FB.entities.push(new FB.Pipe(FB.WIDTH * 3, 50));
 
-                FB.bird = new FB.Bird();
-                FB.entities.push(FB.bird);
+               // FB.bird = new FB.Bird();
+                //FB.entities.push(FB.bird);
+
+                FB.bird = [];
+                for(var i=0; i < playersInfo.length; i++){
+                    console.log('andar');
+                    if(i!=yourPlayerIndex)
+                    {FB.bird[i] = new FB.Bird(i);    
+                    FB.entities.push(FB.bird[i]);}
+                }
+                    FB.bird[yourPlayerIndex] = new FB.Bird(yourPlayerIndex);    
+                    FB.entities.push(FB.bird[yourPlayerIndex]);
                 for(var n=0;n<10;n++){
                     var img = new Image();
                     img.src = "imgs/font_small_" + n +'.png';
@@ -747,12 +760,22 @@ var playerColor = [
                 for (i = 0; i < FB.entities.length; i += 1) {
                     FB.entities[i].update();
                     if (FB.entities[i].type === 'pipe') {
-                        var hit = FB.Collides(FB.bird, FB.entities[i]);
+
+                        for (var j = 0;j<playersInfo.length; j++){
+                            var hit = FB.Collides(FB.bird[j], FB.entities[i]);
                         if (hit) {
                          //   play_sound(soundHit);
                             FB.changeState('GameOver');
                              break;
+                        }    
                         }
+
+                        // var hit = FB.Collides(FB.bird, FB.entities[i]);
+                        // if (hit) {
+                        //  //   play_sound(soundHit);
+                        //     FB.changeState('GameOver');
+                        //      break;
+                        // }
                     }
                 }
             }
@@ -869,6 +892,7 @@ var playerColor = [
   function gotStartMatch(params) {
     yourPlayerIndex = params.yourPlayerIndex;
     playersInfo = params.playersInfo;
+    console.log('playersInfo=',playersInfo.length)
     matchController = params.matchController;
     isGameOngoing = true;
     isSinglePlayer = playersInfo.length === 1;
