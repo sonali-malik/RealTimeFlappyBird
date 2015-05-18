@@ -87,7 +87,7 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
         }   
 
         
-        function createFB(){
+        function createFB(playerIndex){
 
          // namespace our game
         var FB = {
@@ -103,6 +103,7 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
             },
             // store all bird, touches, pipes etc
             entities: [],
+            currentPlayerIndex:playerIndex,
             currentWidth: null,
             currentHeight: null,
             canvas: null,
@@ -127,9 +128,9 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
             android: null,
             ios: null,
             gradients: {},
-            init: function (canvas) {
+            init: function (canvas,playerIndex) {
                 console.log('in init');
-
+                FB.currentPlayerIndex = playerIndex;
                 var grad;
                 // the proportion of width to height
                 FB.RATIO = FB.WIDTH / FB.HEIGHT;
@@ -227,12 +228,26 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
             render: function () {
 
                 FB.Draw.rect(0, 0, FB.WIDTH, FB.HEIGHT, FB.gradients[FB.bg_grad]);
-                 
+                 var myBird = null;
                 // cycle through all entities and render to canvas
                 for (var i = 0; i < FB.entities.length; i += 1) {
-                    FB.entities[i].render();
+                    if(FB.entities[i].type!='bird'){
+                        FB.entities[i].render();
+                    }
+                    // else {
+
+                    // }
+                    // else if(FB.entities[i].playerIndex != getYourPlayerIndex()){
+                    //     FB.entities[i].render();
+                    // }
+                    // else {
+                    //     myBird = FB.entities[i];
+                    // }    
+
+                   
+
                 }
-                    
+               
                 FB.game.render();
                 
             },
@@ -476,13 +491,15 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
             this.ix = 0;
             this.iy = 0;
             this.fr = 0;
-            this.vy = 180+(20*playerIndex);
+            this.vy = 180;
+            //+(20*playerIndex);
             this.vx = 70;
             this.velocity = 0;
             this.play = false;
             this.jump = -4.6;
             this.rotation = 0;
             this.type = 'bird';
+            this.playerIndex = playerIndex;
             this.update = function () {
                 if (this.fr++ > 5) {
                     this.fr = 0;
@@ -621,11 +638,81 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
    
    window.isGameOngoing = false;
    
-  var yourPlayerIndex = 0;
-  
+  var yourPlayerIndex = -1;
+  function getYourPlayerIndex(){
+    return yourPlayerIndex;
+  }
   var isSinglePlayer = false;  
  
-        window.Splash = function(FB){
+
+
+     //   window.addEventListener('load', FB.init, false);
+       
+  var FB1;
+
+  function gotStartMatch(params) {
+    yourPlayerIndex = params.yourPlayerIndex;
+    playersInfo = params.playersInfo;
+    console.log('playersInfo=',playersInfo.length)
+    matchController = params.matchController;
+    isGameOngoing = true;
+    isSinglePlayer = playersInfo.length === 1;
+    startMatchTime = new Date().getTime();
+
+
+    $log.info("gotStartMatch:", params);
+    //Starts the match
+    resizeGameAreaService.setWidthToHeight(0.5);
+     FB1 = createFB(yourPlayerIndex);
+    if(firstStart){
+       
+        FB1.init(canvas,yourPlayerIndex);
+   //     firstStart = false;
+
+    setTimeout(function(
+    ){FB1.changeState('Play');
+                    FB1.Input.tapped = false;
+    setDrawInterval();},2000);
+    }
+    else {
+        setTimeout(function(
+    ){
+            FB1.init(canvas,yourPlayerIndex);
+            
+           },2000);
+        setTimeout(function(
+    ){
+            
+            
+            FB1.changeState('Play');
+                   FB1.Input.tapped = false;
+    setDrawInterval();},5000);
+    }
+    
+    
+
+
+}
+   function gotMessage(params) {}
+   function gotEndMatch(endMatchScores) {
+    // allScores = endMatchScores;
+    isGameOngoing = false;
+   }
+
+     var drawInterval;
+
+  function setDrawInterval() {
+    stopDrawInterval();
+    // Every 2 food pieces we increase the snake speed (to a max speed of 50ms interval).
+   // var intervalMillis = Math.max(50, drawEveryMilliseconds - 10 * Math.floor(foodCreatedNum / 2));
+    drawInterval = setInterval(FB1.loop, 1000/60);
+  }
+
+  function stopDrawInterval() {
+    clearInterval(drawInterval);
+  }
+
+  window.Splash = function(FB){
             
             this.banner = new Image();
             this.banner.src = "imgs/splash.png";
@@ -702,11 +789,16 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                 //FB.entities.push(FB.bird);
 
                 FB.bird = [];
+                if(yourPlayerIndex == -1){
+                    yourPlayerIndex = 0;
+                }
                 for(var i=0; i < playersInfo.length; i++){
                     console.log('andar');
                     if(i!=yourPlayerIndex)
-                    {FB.bird[i] = new FB.Bird(i);    
-                    FB.entities.push(FB.bird[i]);}
+                    {
+                       FB.bird[i] = new FB.Bird(i);    
+                       FB.entities.push(FB.bird[i]);
+                    }
                 }
                     FB.bird[yourPlayerIndex] = new FB.Bird(yourPlayerIndex);    
                     FB.entities.push(FB.bird[yourPlayerIndex]);
@@ -755,10 +847,19 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
                     checkCollision = true;
                 }
-
+                var myBird;
                 // cycle through all entities and update as necessary
                 for (i = 0; i < FB.entities.length; i += 1) {
-                    FB.entities[i].update();
+                    //FB.entities[i].update();
+                    if(FB.entities[i].type!='bird'){
+                        FB.entities[i].update();
+                    }
+                    else if(FB.entities[i].playerIndex != FB.currentPlayerIndex){
+                        FB.entities[i].update();
+                    }
+                    else {
+                        myBird = FB.entities[i];
+                    }
                     if (FB.entities[i].type === 'pipe') {
 
                         for (var j = 0;j<playersInfo.length; j++){
@@ -778,12 +879,30 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                         // }
                     }
                 }
+
+                myBird.update();
             }
             
             this.render = function() { 
              //  var meter = new FPSMeter(document.body );
              // meter.tick();  
-                //score             
+                //score     
+                var myBird; 
+                //BIRD ON TOP     
+                for (i = 0; i < FB.entities.length; i += 1) {
+                    //FB.entities[i].update();
+                    if(FB.entities[i].type==='bird'){
+                        if(FB.entities[i].playerIndex != FB.currentPlayerIndex){
+                            FB.entities[i].render();
+                        }
+                        else {
+                            myBird = FB.entities[i];
+                        }
+                    }
+                }
+
+                myBird.render();
+
                 var X = (FB.WIDTH/2-(FB.digits.length*14)/2);               
                 for(var i = 0; i < FB.digits.length; i++)
                 {
@@ -884,72 +1003,6 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
         
         }
-
-     //   window.addEventListener('load', FB.init, false);
-       
-  var FB1;
-
-  function gotStartMatch(params) {
-    yourPlayerIndex = params.yourPlayerIndex;
-    playersInfo = params.playersInfo;
-    console.log('playersInfo=',playersInfo.length)
-    matchController = params.matchController;
-    isGameOngoing = true;
-    isSinglePlayer = playersInfo.length === 1;
-    startMatchTime = new Date().getTime();
-
-
-    $log.info("gotStartMatch:", params);
-    //Starts the match
-    resizeGameAreaService.setWidthToHeight(0.5);
-     FB1 = createFB();
-    if(firstStart){
-       
-        FB1.init(canvas);
-   //     firstStart = false;
-
-    setTimeout(function(
-    ){FB1.changeState('Play');
-                    FB1.Input.tapped = false;
-    setDrawInterval();},2000);
-    }
-    else {
-        setTimeout(function(
-    ){
-            FB1.init(canvas);
-            
-           },2000);
-        setTimeout(function(
-    ){
-            
-            
-            FB1.changeState('Play');
-                   FB1.Input.tapped = false;
-    setDrawInterval();},5000);
-    }
-    
-    
-
-
-}
-   function gotMessage(params) {}
-   function gotEndMatch(endMatchScores) {
-    // allScores = endMatchScores;
-    isGameOngoing = false;
-   }
-
-     var drawInterval;
-
-  function setDrawInterval() {
-    stopDrawInterval();
-    // Every 2 food pieces we increase the snake speed (to a max speed of 50ms interval).
-   // var intervalMillis = Math.max(50, drawEveryMilliseconds - 10 * Math.floor(foodCreatedNum / 2));
-    drawInterval = setInterval(FB1.loop, 1000/60);
-  }
-
-  function stopDrawInterval() {
-    clearInterval(drawInterval);
-  }
 
        return {
     gotStartMatch: gotStartMatch,
