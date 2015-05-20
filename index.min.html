@@ -32,7 +32,7 @@
 
    <div style="position:absolute; bottom:5px; left: 5px">
     <span ng-click="isHelpModalShown = true" id="openb"
-        class="glyphicon glyphicon-question-sign" aria-hidden="true" onclick="window.isGameOngoing = true;"></span>
+        class="glyphicon glyphicon-question-sign" aria-hidden="true" onclick="window.isGameOngoing = false;"></span>
   </div>
 
  <div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
@@ -40,7 +40,7 @@
     <div class="modal-dialog">
      <div class="modal-content">
         <div class="modal-header">
-          <button type="button" id="closeb" class="close" ng-click="isHelpModalShown = false" aria-label="Close" onclick="window.isGameOngoing = true; "><span aria-hidden="true">&times;</span></button>
+          <button type="button" id="closeb" class="close" ng-click="isHelpModalShown = false;" aria-label="Close" onclick="window.isGameOngoing = true; "><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">
             {{ 'RULES_OF_LINESOFACTIONS' | translate }}
           </h4>
@@ -132,13 +132,13 @@ window.addEventListener('load',function(){
     }, false)
 
     // closeb.addEventListener('touchstart', function(e){
-    //     e.preventDefault();
+    //    // e.preventDefault();
         
     // }, false)
  
     // closeb.addEventListener('touchmove', function(e){
         
-    //     e.preventDefault()
+    //   //  e.preventDefault()
         
     // }, false)
  
