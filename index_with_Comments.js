@@ -16,7 +16,6 @@ var matchController = null;
   var firstStart = true;
   var allFB = [];
   var allBirds = [];
-  var toCallEndMatch = false;
 //var d = new Date();
 //var curTime=d.getTime();
 var randomIndex= 1;
@@ -661,7 +660,6 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
   function gotStartMatch(params) {
     allScores = [];
-    toCallEndMatch = true;
     yourPlayerIndex = params.yourPlayerIndex;
     playersInfo = params.playersInfo;
     console.log('playersInfo=',playersInfo.length)
@@ -721,11 +719,17 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
 
 }
-    //get your FB
+
     function getFB(){
         return allFB[yourPlayerIndex];
     }
-    
+    function setFB(f){
+        //FB1 = f;
+        for(var i=0; i<allFB.length; i++){
+            //allFB[i].entities[] = f;    
+        }
+        
+    }
     function getScores(){
         return allScores[yourPlayerIndex];
     }
@@ -765,9 +769,26 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                 break;
             }
         }
-       
+        // birdsInfo[i].img.src = birds[i].img.src;
+        // birdsInfo[i].gravity = birds[i].gravity;
+        // birdsInfo[i].width = birds[i].width;
+        // birdsInfo[i].height = birds[i].height;
+        // birdsInfo[i].ix = birds[i].ix;
+        // birdsInfo[i].iy = birds[i].iy;
+        // birdsInfo[i].fr = birds[i].fr;
+        // birdsInfo[i].vy = birds[i].vy;
+        // birdsInfo[i].velocity = birds[i].velocity;
+        // birdsInfo[i].play = birds[i].play;
+        // birdsInfo[i].jump = birds[i].jump;
+        // birdsInfo[i].rotation = birds[i].rotation;
+        // birdsInfo[i].type = birds[i].type;
+        // birdsInfo[i].playerIndex = birds[i].playerIndex;
     
     
+    
+    // for(var i = FB.entities.length; i > playersInfo.length; i++){
+    //     birds = 
+    // }
     if(f){
     var messageString = angular.toJson(
         {fb:birdsInfo , s: allScores[yourPlayerIndex]});
@@ -789,19 +810,50 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
 
         // {fb1: fb bird, s: score}
-        
+        // The array representing the cells of a player's snake.
         var messageObject = angular.fromJson(messageString);
         //FB1 = messageObject.fb;
         allScores[fromPlayerIndex] = messageObject.s;
         var birdFromPrevious = messageObject.fb[0];
-        
+        //updateBird(fromPlayerIndex,birdFromPrevious);
+        //         this.gravity = 0.25;
+    //         this.width = 34;
+    //         this.height = 24;
+    //         this.ix = 0;
+    //         this.iy = 0;
+    //         this.fr = 0;
+    //         this.vy = 180;
+    //         //+(20*playerIndex);
+    //         this.vx = 70;
+    //         this.velocity = 0;
+    //         this.play = false;
+    //         this.jump = -4.6;
+    //         this.rotation = 0;
+    //         this.type = 'bird';
+    //         this.playerIndex = playerIndex;
+
+
+        //FB1.entities = messageObject.fb;
+        //FB1.changeState('Play');
         var j = 0;
         var i = f.entities.length - 1;
         var len = i - playersInfo.length;
         var index;
         for(; i > len; i--){
             if(f.entities[i].type == 'bird' && f.entities[i].playerIndex === fromPlayerIndex){
-               
+               // f.entities[i].img.src = birdFromPrevious.src;
+                // f.entities[i].gravity = birdFromPrevious.gravity;
+                // f.entities[i].width = birdFromPrevious.width;
+                // f.entities[i].height = birdFromPrevious.height;
+                // f.entities[i].ix = birdFromPrevious.ix;
+                // f.entities[i].iy = birdFromPrevious.iy;
+                // f.entities[i].fr = birdFromPrevious.fr;
+                // f.entities[i].vy = birdFromPrevious.vy;
+                // f.entities[i].vx = birdFromPrevious.vx;
+                // f.entities[i].velocity = birdFromPrevious.velocity;
+                // f.entities[i].play = birdFromPrevious.play;
+                // f.entities[i].jump = birdFromPrevious.jump;
+                // f.entities[i].rotation = birdFromPrevious.rotation;
                 index = i;
                 break;
             }
@@ -810,14 +862,16 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
         if(f.entities.length <9){
             return;
         }
-        
+        // for(var i=0; i<allFB.length;i++){
+        //     allFB[i].entities[index] = f.entities[index];
+        // }       
         for(var i = 0; i<allBirds.length; i++){
             if(allBirds[i].playerIndex === f.entities[index].playerIndex){
                 allBirds[i] = f.entities[index];
                 break;
             }            
         }
-      
+      //  setFB(f);
     }
    }
    function gotEndMatch(endMatchScores) {
@@ -896,8 +950,7 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
 
 
       // Gives you a hint what is your color
-      var yourColor = playerColor[FB.currentPlayerIndex];
-      //playerColor[0];
+      var yourColor = playerColor[0];
      
       var msg = $translate("YOUR_BIRD_COLOR_IS",
           {color: $translate(yourColor.toUpperCase())});
@@ -951,9 +1004,32 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                 FB.digits = ["0"];
             }
             
-            //NOT WORKING
             this.update1 = function() {
-                
+                // for (var i = 0; i < FB.entities.length; i += 1) {
+                    
+                //     if(FB.entities[i].type === 'bird' && FB.entities[i].playerIndex != FB.currentPlayerIndex){
+                //         //FB.entities[i] = allFB[i].entities[];
+                //         for(var j = 0; j < allFB.length; j++){
+                //             for(var k = 0; k<allFB[j].entities.length; k++) {
+                //                 if(allFB[j].entities[k].type === 'bird' &&
+                //                     FB.entities[i].playerIndex === allFB[j].entities[k].playerIndex ) {
+
+                //                     FB.entities[i] = allFB[j].entities[k];
+                //                     break;
+                //                 }
+                //             }
+                //         }
+                //     }
+                    
+
+                //         // var hit = FB.Collides(FB.bird, FB.entities[i]);
+                //         // if (hit) {
+                //         //  //   play_sound(soundHit);
+                //         //     FB.changeState('GameOver');
+                //         //      break;
+                //         // }
+                //     }
+
                     var j = 0;
                     var i = FB.entities.length - 1;
                     var len = i - playersInfo.length;
@@ -1054,7 +1130,6 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                         if (hit) {
                          //   play_sound(soundHit);
                             FB.changeState('GameOver');
-                            matchController.endMatch(allScores);
                              break;
                         }    
                         }
@@ -1189,10 +1264,7 @@ var colorImgSrc = ['imgs/bird_blue.png','imgs/bird_red.png','imgs/bird_brown.png
                  
                 },0);
             }
-                // if(toCallEndMatch){
-                //                  matchController.endMatch(allScores);
-                //                  toCallEndMatch = false;
-                //              }
+                                 matchController.endMatch(allScores);
 
         
         }
