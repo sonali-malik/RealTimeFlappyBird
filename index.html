@@ -29,9 +29,9 @@
   <!-- build:js http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.min.js -->
   <script crossorigin="anonymous" src="http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.js"></script>
   <!-- /build -->
-<script  src="fpsMeter.min.js"></script>
+<script crossorigin="anonymous" src="fpsMeter.min.js"></script>
   <!-- build:js index.min.js -->
-  <script  src="index.js"></script>
+  <script crossorigin="anonymous" src="index.js"></script>
   <!-- /build -->
 
 <script>window.angularTranslationLanguages = ['en', 'hn'];</script>
@@ -51,7 +51,7 @@
         class="glyphicon glyphicon-question-sign" aria-hidden="true" onclick="window.isGameOngoing = false;"></span>
   </div>
 
- <div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
+ <div class="overlayModal" ng-class="{zeroOpacity: !isHelpModalShown, oneOpacity: isHelpModalShown}" aria-hidden="true">
     <div class="modal-backdrop in"></div>
     <div class="modal-dialog">
      <div class="modal-content">
