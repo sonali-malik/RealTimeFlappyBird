@@ -5,15 +5,23 @@ CACHE MANIFEST
 CACHE:
 http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js
 http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.11/seedrandom.min.js
+http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css
+ http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js
+http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js 
 fpsMeter.min.js
 index.min.js
-http://yoav-zibin.github.io/emulator/dist/realTimeServices.min.js
-http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.min.js
-http://yoav-zibin.github.io/emulator/dist/gameServices.min.js
-http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js
+http://yoav-zibin.github.io/emulator/dist/realTimeServices.2.min.js 
 languages/en.js
+languages/hn.js
+imgs/bird_yellow.png
+imgs/bird_red.png
+imgs/bird_blue.png
+imgs/bird_purple.png
+imgs/bird_silver.png
+imgs/bird_brown.png
+imgs/bird_orange.png
+imgs/bird_pink.png
 
-imgs/bird.png
 imgs/font_small_0.png
 imgs/font_small_1.png
 imgs/font_small_2.png
@@ -31,6 +39,9 @@ imgs/medal_platinum.png
 imgs/replay.png
 imgs/scoreboard.png
 imgs/splash.png
+imgs/slide1.PNG
+imgs/slide4.PNG
+imgs/slide3.PNG
 audio/die.ogg
 audio/hit.ogg
 audio/point.ogg
